@@ -20,14 +20,14 @@ class ST{
     int mid=(low+high)>>1;
     build(2*ind+1,low,mid,arr);
     build(2*ind+2,mid+1,high,arr);
-    st[ind]=st[2*ind+1]+st[2*ind+2];
+    st[ind]=min(st[2*ind+1],st[2*ind+2]);
   }
   public:
   void update(int ind,int low,int high,int l,int r,int val)
   {
     //update the previous remaining updates and propogate downwards
     if(lazy[ind]!=0){
-    st[ind]+=(high-low+1)*lazy[ind];
+    st[ind]+=lazy[ind];
     //propogate the lazy update downwards for the remaining nodes to get updated
     if(low!=high)
     {
@@ -44,7 +44,7 @@ class ST{
     // complete overlap
     if(low>=l and high<=r)
     {
-      st[ind]+=(high-low+1)*val;
+      st[ind]+=val;
       if(low!=high)
       {
         lazy[2*ind+1]+=val;
@@ -56,7 +56,7 @@ class ST{
     int mid=(low+high)>>1;
    update(2*ind+1,low,mid,l,r,val);
    update(2*ind+2,mid+1,high,l,r,val);
-   st[ind]=st[2*ind+1]+st[2*ind+2];
+   st[ind]=min(st[2*ind+1],st[2*ind+2]);
   }
   public :
   int query(int ind,int low,int high,int l,int r )
@@ -64,7 +64,7 @@ class ST{
     //update if updates are remaining 
     //then update
      if(lazy[ind]!=0){
-    st[ind]+=(high-low+1)*lazy[ind];
+    st[ind]+=lazy[ind];
     //propogate the lazy update downwards for the remaining nodes to get updated
     if(low!=high)
     {
@@ -75,7 +75,7 @@ class ST{
     }
     //no overlap return 0
     if(high<l or r<low)
-    return 0;
+    return INT_MAX;
     // complete overlap
     if(low>= l and high<=r)
     {
@@ -85,7 +85,7 @@ class ST{
     int mid=(low+high)>>1;
     int left=query(2*ind+1,low,high,l,r);
     int right=query(2*ind+2,low,high,l,r);
-    return left+right;
+    return min(left,right);
   }
 
 };
